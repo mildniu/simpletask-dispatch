@@ -71,15 +71,21 @@ function renderTask(task) {
         <span class="badge ${badgeClass(task.status)}">${TaskApp.escapeHtml(task.status)}</span>
       </div>
       <p>${TaskApp.escapeHtml(task.description)}</p>
-      <div class="meta">
-        派单人：${TaskApp.escapeHtml(task.creator_name)}　负责人：${TaskApp.escapeHtml(task.assignee_name)}
-       　优先级：${TaskApp.escapeHtml(task.priority)}　截止：${TaskApp.formatDate(task.due_date)}
+      <div class="task-meta-grid">
+        ${taskMeta("派单人", task.creator_name)}
+        ${taskMeta("负责人", task.assignee_name)}
+        ${taskMeta("优先级", task.priority)}
+        ${taskMeta("截止", TaskApp.formatDate(task.due_date))}
       </div>
       ${renderResult(task)}
       ${renderReturnReason(task)}
       <div class="task-actions">${renderActions(task)}</div>
     </article>
   `;
+}
+
+function taskMeta(label, value) {
+  return `<div><span>${label}</span><strong>${TaskApp.escapeHtml(value)}</strong></div>`;
 }
 
 function renderResult(task) {
