@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>内部派单系统</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/admin.css" />
+    <link rel="stylesheet" href="/mobile.css" />
+    <link rel="stylesheet" href="/pages.css" />
+    <link rel="stylesheet" href="/stats.css" />
+    <link rel="stylesheet" href="/users.css" />
+  </head>
+  <body>
+    <section id="authView" class="auth-view hidden">
+      <div class="auth-card">
+        <h1>内部派单系统</h1>
+        <p id="authHint">高效 · 协同 · 可追踪</p>
+        <form id="authForm">
+          <label>
+            <span>账号</span>
+            <input id="authUsername" autocomplete="username" placeholder="请输入账号" required />
+          </label>
+          <label>
+            <span>密码</span>
+            <input id="authPassword" type="password" autocomplete="current-password" placeholder="请输入密码" required />
+          </label>
+          <label id="authNameWrap">
+            <span>姓名</span>
+            <input id="authName" placeholder="请输入姓名" />
+          </label>
+          <button id="authSubmit" type="submit">登录</button>
+        </form>
+        <p class="security-tip">请使用公司内部账号，勿共享账号密码。</p>
+      </div>
+    </section>
+
+    <section id="appView" class="app-view hidden">
+      <header id="appTopbar" class="topbar">
+        <div>
+          <h1>内部派单系统</h1>
+          <p id="userMeta"></p>
+        </div>
+        <div class="top-actions">
+          <button id="adminConsole" class="secondary" type="button">管理后台</button>
+          <button id="userManage" class="secondary" type="button">用户管理</button>
+          <button id="logout" class="secondary" type="button">退出</button>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section id="tasksView" class="app-page">
+          <div id="taskStats" class="task-stats"></div>
+          <div class="section-title">
+            <h2>任务列表</h2>
+            <div class="tabs">
+              <button class="tab active" data-filter="all">全部</button>
+              <button class="tab" data-filter="mine">我负责的</button>
+              <button class="tab" data-filter="sent">我派出的</button>
+            </div>
+          </div>
+          <div id="message" class="message"></div>
+          <div id="taskList" class="task-list"></div>
+        </section>
+
+        <section id="createView" class="app-page hidden">
+          <div class="page-title-inline">
+            <h2>创建派单</h2>
+            <p>填写任务内容并指定负责人</p>
+          </div>
+          <form id="taskForm" class="inline-form">
+            <label>
+              <span>任务标题</span>
+              <input id="title" required maxlength="80" />
+            </label>
+            <label>
+              <span>任务内容</span>
+              <textarea id="description" required rows="4"></textarea>
+            </label>
+            <div class="row">
+              <label>
+                <span>负责人</span>
+                <select id="assignee" required></select>
+              </label>
+              <label>
+                <span>优先级</span>
+                <select id="priority">
+                  <option>普通</option>
+                  <option>紧急</option>
+                  <option>低</option>
+                </select>
+              </label>
+            </div>
+            <label>
+              <span>截止时间</span>
+              <input id="dueDate" type="datetime-local" required />
+            </label>
+            <button class="sticky-primary" type="submit">创建并派单</button>
+          </form>
+        </section>
+
+        <section id="statsView" class="app-page hidden">
+          <div class="page-title-inline">
+            <h2>统计</h2>
+            <p>任务运行和人员效能</p>
+          </div>
+          <div class="stats-filter">
+            <button class="active" data-stats-range="month" type="button">本月</button>
+            <button data-stats-range="week" type="button">本周</button>
+            <button data-stats-range="all" type="button">全部</button>
+          </div>
+          <div id="statsBody" class="stats-page"></div>
+        </section>
+
+        <section id="mineView" class="app-page hidden">
+          <form id="profileForm">
+            <div class="page-title-inline">
+              <h2>我的</h2>
+              <p>头像、手机号和密码</p>
+            </div>
+            <section class="mine-card mine-profile">
+              <label class="avatar-picker" for="avatarInput">
+                <span id="profileAvatar" class="profile-avatar"></span>
+                <strong>更换头像</strong>
+              </label>
+              <input id="avatarInput" type="file" accept="image/*" />
+              <div>
+                <h3 id="profileName"></h3>
+                <p id="profileMeta"></p>
+              </div>
+            </section>
+            <section class="mine-card">
+              <label>
+                <span>手机号 / 登录账号</span>
+                <input id="profilePhone" inputmode="tel" required />
+              </label>
+              <label>
+                <span>新密码</span>
+                <input id="profilePassword" type="password" autocomplete="new-password" placeholder="不修改可留空" />
+              </label>
+              <label>
+                <span>确认新密码</span>
+                <input id="profilePasswordConfirm" type="password" autocomplete="new-password" placeholder="再次输入新密码" />
+              </label>
+              <button class="sticky-primary" type="submit">保存修改</button>
+            </section>
+          </form>
+        </section>
+      </main>
+      <nav class="bottom-nav">
+        <button class="active" data-page="tasks" type="button">任务</button>
+        <button id="navCreate" data-page="create" type="button">派单</button>
+        <button id="openStats" data-page="stats" type="button">统计</button>
+        <button id="navMine" data-page="mine" type="button">我的</button>
+      </nav>
+    </section>
+
+    <dialog id="submitDialog">
+      <form id="submitForm">
+        <div class="page-head">
+          <button id="closeSubmit" class="icon-back" type="button">‹</button>
+          <h2>提交阶段进展</h2>
+        </div>
+        <section class="form-card">
+          <label>
+            <span>处理说明 <b>*</b></span>
+            <textarea id="resultText" rows="5" maxlength="300" required placeholder="请简要描述本阶段的处理情况、已完成内容及下一步计划..."></textarea>
+          </label>
+        </section>
+        <section class="form-card">
+          <h3>上传附件</h3>
+          <p class="muted">选填，支持图片、文档等格式</p>
+          <label class="upload-zone" for="resultFile">
+            <strong>点击上传文件</strong>
+            <span>单个文件不超过 10MB</span>
+          </label>
+          <input id="resultFile" type="file" />
+        </section>
+        <section id="submitSummary" class="form-card submit-summary"></section>
+        <button id="submitResult" class="sticky-primary" type="submit">提交进展</button>
+      </form>
+    </dialog>
+
+    <dialog id="detailDialog">
+      <div class="detail-head page-head">
+        <button class="icon-back" id="closeDetail" type="button">‹</button>
+        <h2>任务详情</h2>
+        <span class="head-spacer"></span>
+      </div>
+      <div id="detailBody" class="detail-body"></div>
+    </dialog>
+
+    <dialog id="returnDialog">
+      <form id="returnForm">
+        <div class="page-head">
+          <button id="closeReturn" class="icon-back" type="button">‹</button>
+          <h2>退回任务</h2>
+          <span></span>
+        </div>
+        <section id="returnSummary" class="form-card return-summary"></section>
+        <section class="form-card">
+          <label>
+            <span>退回原因 <b>*</b></span>
+            <textarea id="returnReason" maxlength="300" required placeholder="请填写退回原因，说明需要补充或重新处理的内容..."></textarea>
+          </label>
+          <div id="returnCount" class="count">0/300</div>
+        </section>
+        <section class="form-card">
+          <h3>处理建议</h3>
+          <p class="muted">可选，帮助负责人快速理解退回方向</p>
+          <div class="return-chips">
+            <button data-reason="资料不完整" type="button">资料不完整</button>
+            <button data-reason="结果不清晰" type="button">结果不清晰</button>
+            <button data-reason="需重新处理" type="button">需重新处理</button>
+          </div>
+        </section>
+        <div class="return-actions">
+          <button class="secondary" id="cancelReturn" type="button">取消</button>
+          <button class="danger" type="submit">确认退回</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="userDialog">
+      <div class="user-hero">
+        <h2>用户管理</h2>
+        <p>管理系统内建用户与权限</p>
+        <button class="secondary" id="closeUsers" type="button">返回</button>
+      </div>
+      <button class="create-cta" id="showUserForm" type="button">新增用户</button>
+      <form id="userForm" class="user-form">
+        <input id="newUsername" placeholder="账号" required />
+        <input id="newName" placeholder="姓名" required />
+        <input id="newPassword" type="password" placeholder="初始密码" required />
+        <select id="newRole">
+          <option value="member">成员</option>
+          <option value="branch">支局长</option>
+          <option value="supervisor">主管</option>
+          <option value="manager">经理</option>
+          <option value="admin">系统管理员</option>
+        </select>
+        <button type="submit">新增用户</button>
+      </form>
+      <div class="user-tools">
+        <input id="userSearch" placeholder="搜索姓名或账号" />
+        <div class="user-chips">
+          <button class="chip active" data-role="all" type="button">全部</button>
+          <button class="chip" data-role="admin" type="button">系统管理员</button>
+          <button class="chip" data-role="manager" type="button">经理</button>
+          <button class="chip" data-role="supervisor" type="button">主管</button>
+          <button class="chip" data-role="branch" type="button">支局长</button>
+          <button class="chip" data-role="member" type="button">成员</button>
+        </div>
+      </div>
+      <div id="userList" class="user-list"></div>
+    </dialog>
+
+    <dialog id="imagePreviewOverlay" class="image-preview-overlay hidden" aria-label="图片附件预览">
+      <button id="closeImagePreview" class="image-preview-close" type="button" aria-label="关闭预览">×</button>
+      <img id="imagePreviewImg" alt="图片附件预览" />
+      <p id="imagePreviewName"></p>
+    </dialog>
+
+    <script src="/app.js"></script>
+    <script src="/stats.js"></script>
+    <script src="/tasks.js"></script>
+    <script src="/users-ui.js"></script>
+  </body>
+</html>

@@ -1,0 +1,146 @@
+.user-hero {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  margin: 32px 0 24px;
+  text-align: center;
+}
+
+.user-hero h2 {
+  color: #12345f;
+  font-size: 34px;
+}
+
+.user-hero .secondary {
+  position: absolute;
+  left: 0;
+  top: 0;
+  min-height: 34px;
+  border: 0;
+  background: transparent;
+  color: #0b73f6;
+}
+
+.user-form {
+  margin-bottom: 14px;
+  padding: 14px;
+  border: 1px solid #e4edf7;
+  border-radius: 18px;
+  background: #ffffff;
+}
+
+.user-form.collapsed,
+.user-edit.collapsed {
+  display: none;
+}
+
+.user-tools {
+  display: grid;
+  gap: 14px;
+  margin: 16px 0;
+}
+
+#userSearch {
+  min-height: 54px;
+  border-radius: 14px;
+  font-size: 17px;
+}
+
+.user-chips {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.chip {
+  min-height: 46px;
+  border: 0;
+  border-radius: 18px;
+  background: #ffffff;
+  color: #66758b;
+  box-shadow: 0 8px 24px rgba(27, 76, 130, 0.06);
+}
+
+.chip.active {
+  background: #0b73f6;
+  color: #ffffff;
+}
+
+.user-card {
+  grid-template-columns: 54px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid #e4edf7;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 12px 30px rgba(27, 76, 130, 0.08);
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #eaf3ff;
+  color: #0b73f6;
+}
+
+.user-main {
+  display: grid;
+  gap: 4px;
+}
+
+.user-main strong {
+  color: #12345f;
+  font-size: 20px;
+}
+
+.user-main span {
+  color: #66758b;
+}
+
+.user-main em {
+  width: max-content;
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: #eaf3ff;
+  color: #0b73f6;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.user-status {
+  color: #20b46b;
+  white-space: nowrap;
+}
+
+.user-status.disabled {
+  color: #8a97a8;
+}
+
+.user-actions,
+.user-edit {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 10px;
+}
+
+.user-actions {
+  grid-template-columns: 1fr 1fr;
+}
+
+.user-actions button {
+  min-height: 48px;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #0b73f6;
+  border-color: #b9d6ff;
+  font-weight: 700;
+}
+
+.user-actions .danger {
+  color: #e24a4a;
+  border-color: #ffd1d1;
+}

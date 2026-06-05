@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>系统管理后台</title>
+    <link rel="stylesheet" href="/admin-page.css" />
+  </head>
+  <body>
+    <section id="adminAuth" class="admin-auth hidden">
+      <form id="adminLoginForm" class="login-panel">
+        <h1>系统管理后台</h1>
+        <p>仅系统管理员可访问</p>
+        <input id="adminUsername" autocomplete="username" placeholder="账号" required />
+        <input id="adminPassword" type="password" autocomplete="current-password" placeholder="密码" required />
+        <button type="submit">登录</button>
+      </form>
+    </section>
+
+    <section id="adminApp" class="admin-shell hidden">
+      <aside class="sidebar">
+        <div class="brand">
+          <strong>派单管理</strong>
+          <span>Admin Console</span>
+        </div>
+        <nav>
+          <button class="active" data-admin-tab="dashboard" type="button">总览</button>
+          <button data-admin-tab="tasks" type="button">任务管理</button>
+          <button data-admin-tab="users" type="button">用户管理</button>
+        </nav>
+        <a class="back-link" href="/">返回业务端</a>
+      </aside>
+
+      <main class="workspace">
+        <header class="admin-topbar">
+          <div>
+            <h1 id="pageTitle">总览</h1>
+            <p id="adminMeta"></p>
+          </div>
+          <div class="topbar-actions">
+            <button id="refreshAdmin" class="ghost" type="button">刷新</button>
+            <button id="adminLogout" class="ghost" type="button">退出</button>
+          </div>
+        </header>
+
+        <section id="dashboardView" class="view">
+          <div id="adminStats" class="stat-grid"></div>
+          <div class="content-grid">
+            <section class="panel">
+              <div class="panel-head">
+                <h2>状态分布</h2>
+                <span>全部任务</span>
+              </div>
+              <div id="statusBars" class="status-bars"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-head">
+                <h2>近期任务</h2>
+                <span>按更新时间</span>
+              </div>
+              <div id="recentTasks" class="recent-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="tasksView" class="view hidden">
+          <div class="toolbar">
+            <input id="taskSearch" placeholder="搜索标题、派单人、负责人" />
+            <select id="taskStatusFilter">
+              <option value="all">全部状态</option>
+              <option>待接单</option>
+              <option>处理中</option>
+              <option>待确认</option>
+              <option>已完成</option>
+              <option>已退回</option>
+            </select>
+          </div>
+          <section class="panel table-panel">
+            <table>
+              <thead>
+                <tr>
+                  <th>任务</th>
+                  <th>状态</th>
+                  <th>派单人</th>
+                  <th>负责人</th>
+                  <th>截止时间</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="adminTaskRows"></tbody>
+            </table>
+          </section>
+        </section>
+
+        <section id="usersView" class="view hidden">
+          <div class="toolbar">
+            <input id="adminUserSearch" placeholder="搜索姓名、账号、岗位" />
+            <select id="adminRoleFilter">
+              <option value="all">全部角色</option>
+              <option value="admin">系统管理员</option>
+              <option value="manager">经理</option>
+              <option value="supervisor">主管</option>
+              <option value="branch">支局长</option>
+              <option value="member">成员</option>
+            </select>
+            <button id="showCreateUser" type="button">新增用户</button>
+          </div>
+          <form id="createUserForm" class="create-user hidden">
+            <input id="createUsername" placeholder="账号" required />
+            <input id="createName" placeholder="姓名" required />
+            <input id="createPassword" type="password" placeholder="初始密码" required />
+            <input id="createPosition" placeholder="岗位" />
+            <select id="createRole">
+              <option value="member">成员</option>
+              <option value="branch">支局长</option>
+              <option value="supervisor">主管</option>
+              <option value="manager">经理</option>
+              <option value="admin">系统管理员</option>
+            </select>
+            <button type="submit">保存</button>
+          </form>
+          <section class="panel table-panel">
+            <table>
+              <thead>
+                <tr>
+                  <th>姓名</th>
+                  <th>账号</th>
+                  <th>角色</th>
+                  <th>岗位</th>
+                  <th>状态</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="adminUserRows"></tbody>
+            </table>
+          </section>
+        </section>
+      </main>
+
+      <aside id="taskDrawer" class="drawer hidden">
+        <div class="drawer-head">
+          <h2>任务详情</h2>
+          <button id="closeDrawer" class="icon-button" type="button">×</button>
+        </div>
+        <div id="drawerBody" class="drawer-body"></div>
+      </aside>
+    </section>
+
+    <script src="/admin-page.js"></script>
+  </body>
+</html>

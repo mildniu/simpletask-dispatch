@@ -1,0 +1,17 @@
+{
+  "name": "simpletask-dispatch",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "check": "node --check src/server.js && node --check src/db.js && node --check src/users.js && node --check src/roster.js && node --check public/app.js && node --check public/tasks.js && node --check public/stats.js && node --check public/users-ui.js && node --check public/admin-page.js && node --check scripts/smoke-flow.js",
+    "import:roster": "node scripts/import-roster-users.js",
+    "check:mobile": "node scripts/mobile-responsive-check.js",
+    "test:click": "node scripts/click-test.js",
+    "smoke": "node scripts/smoke-flow.js"
+  },
+  "devDependencies": {
+    "playwright": "^1.60.0"
+  }
+}

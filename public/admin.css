@@ -1,0 +1,169 @@
+.hidden {
+  display: none !important;
+}
+
+.auth-view {
+  min-height: 100vh;
+  display: block;
+  padding: 44px 20px 22px;
+  background:
+    radial-gradient(circle at 14% 12%, rgba(36, 113, 224, 0.08), transparent 28%),
+    linear-gradient(180deg, #fbfdff 0%, #f3f8ff 100%);
+}
+
+.auth-card {
+  width: min(420px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 22px;
+  padding-top: 80px;
+  background: transparent;
+  border: 0;
+}
+
+.auth-card h1 {
+  color: #14345f;
+  font-size: 36px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 1.15;
+}
+
+#authHint {
+  color: #6d7f96;
+  font-size: 17px;
+  text-align: center;
+}
+
+#authHint::before,
+#authHint::after {
+  content: "";
+  display: inline-block;
+  width: 28px;
+  height: 2px;
+  margin: 0 12px 5px;
+  background: #1f7aff;
+}
+
+#authForm {
+  display: grid;
+  gap: 0;
+  padding: 24px 18px 22px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid #e3edf8;
+  border-radius: 18px;
+  box-shadow: 0 18px 44px rgba(21, 72, 130, 0.12);
+}
+
+.auth-card label {
+  position: relative;
+  display: block;
+  border-bottom: 1px solid #e2e9f2;
+}
+
+.auth-card label span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.auth-card label::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #1875f0;
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.auth-card label:nth-of-type(2)::before {
+  border-radius: 5px;
+}
+
+.auth-card input {
+  min-height: 72px;
+  padding: 0 12px 0 48px;
+  border: 0;
+  color: #1b2b41;
+  font-size: 18px;
+  outline: none;
+}
+
+.auth-card input::placeholder {
+  color: #a8b4c5;
+}
+
+#authSubmit {
+  min-height: 62px;
+  margin-top: 26px;
+  border: 0;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #0b7cff 0%, #0066f5 100%);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+#authNameWrap.hidden + #authSubmit::after {
+  content: "";
+}
+
+#authForm::after {
+  content: "首次使用？ 初始化管理员  ›";
+  display: block;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e5edf6;
+  color: #0b73f6;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.security-tip {
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: rgba(235, 246, 255, 0.9);
+  color: #57708c;
+  font-size: 15px;
+  line-height: 1.6;
+  box-shadow: 0 12px 30px rgba(21, 72, 130, 0.08);
+}
+
+.top-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.user-form,
+.user-list,
+.user-card {
+  display: grid;
+  gap: 10px;
+}
+
+.user-card {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.user-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+@media (min-width: 860px) {
+  .top-actions {
+    grid-template-columns: auto auto;
+    justify-content: end;
+  }
+
+  .user-form {
+    grid-template-columns: 1fr 1fr 1fr 160px auto;
+  }
+}
