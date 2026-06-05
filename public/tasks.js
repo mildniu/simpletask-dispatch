@@ -65,7 +65,7 @@ async function createTask(event) {
 
 function renderTask(task) {
   return `
-    <article class="task">
+    <article class="task ${taskStatusClass(task.status)}">
       <div class="task-head">
         <h3>${TaskApp.escapeHtml(task.title)}</h3>
         <span class="badge ${badgeClass(task.status)}">${TaskApp.escapeHtml(task.status)}</span>
@@ -82,6 +82,14 @@ function renderTask(task) {
       <div class="task-actions">${renderActions(task)}</div>
     </article>
   `;
+}
+
+function taskStatusClass(status) {
+  if (status === "已完成") return "task-done";
+  if (status === "已退回") return "task-returned";
+  if (status === "待确认") return "task-review";
+  if (status === "处理中") return "task-doing";
+  return "task-pending";
 }
 
 function taskMeta(label, value) {

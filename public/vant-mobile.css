@@ -10,13 +10,62 @@
   --van-card: #ffffff;
   --van-border: #ebedf0;
   --van-radius: 12px;
-  --van-shadow: 0 4px 14px rgba(16, 30, 54, 0.06);
+  --van-shadow: 0 3px 10px rgba(16, 30, 54, 0.05);
 }
 
 body {
   background: var(--van-bg);
   color: var(--van-text);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+}
+
+.auth-view {
+  background:
+    linear-gradient(180deg, #eef7ff 0%, #f7f8fa 46%),
+    var(--van-bg);
+}
+
+.auth-card {
+  gap: 16px;
+  padding-top: 72px;
+}
+
+.auth-card h1 {
+  color: var(--van-text);
+  font-size: 30px;
+  font-weight: 800;
+}
+
+#authHint {
+  color: var(--van-text-3);
+  font-size: 14px;
+}
+
+#authHint::before,
+#authHint::after {
+  width: 18px;
+  background: var(--van-blue);
+}
+
+#authForm {
+  gap: 0;
+  padding: 10px 14px 16px;
+  border: 0;
+  border-radius: 16px;
+  box-shadow: var(--van-shadow);
+}
+
+.auth-card input {
+  min-height: 58px;
+  font-size: 16px;
+}
+
+#authSubmit {
+  min-height: 44px;
+  margin-top: 16px;
+  border-radius: 999px;
+  background: var(--van-blue);
+  font-size: 16px;
 }
 
 .app-view {
@@ -27,7 +76,7 @@ body {
 .layout {
   max-width: 720px;
   margin: 0 auto;
-  padding: 12px 12px 84px;
+  padding: 10px 10px 78px;
 }
 
 .app-view .topbar {
@@ -77,8 +126,8 @@ body {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0;
-  margin: 0 0 10px;
-  padding: 10px 0;
+  margin: 0 0 8px;
+  padding: 8px 0;
   border: 0;
   border-radius: var(--van-radius);
   background: var(--van-card);
@@ -115,14 +164,29 @@ body {
 
 .section-title,
 .page-title-inline {
-  margin: 4px 0 10px;
+  position: relative;
+  margin: 2px 0 10px;
+  padding-left: 10px;
+}
+
+.section-title::before,
+.page-title-inline::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 3px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--van-blue);
 }
 
 .section-title h2,
 .page-title-inline h2 {
   color: var(--van-text);
-  font-size: 20px;
+  font-size: 19px;
   line-height: 1.25;
+  font-weight: 800;
 }
 
 .page-title-inline p {
@@ -160,16 +224,53 @@ body {
 }
 
 .task-list {
-  gap: 10px;
+  gap: 9px;
 }
 
 .task {
+  position: relative;
   gap: 11px;
-  padding: 14px;
+  overflow: hidden;
+  padding: 12px 12px 12px 14px;
   border: 0;
   border-radius: var(--van-radius);
   background: var(--van-card);
   box-shadow: var(--van-shadow);
+}
+
+.task::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  background: var(--task-accent, var(--van-blue));
+}
+
+.task-pending {
+  --task-accent: #969799;
+  background: linear-gradient(90deg, #fbfbfc 0%, #ffffff 46%);
+}
+
+.task-doing {
+  --task-accent: var(--van-blue);
+  background: linear-gradient(90deg, #f5fbff 0%, #ffffff 48%);
+}
+
+.task-review {
+  --task-accent: var(--van-orange);
+  background: linear-gradient(90deg, #fff9f3 0%, #ffffff 48%);
+}
+
+.task-done {
+  --task-accent: var(--van-green);
+  background: linear-gradient(90deg, #f4fff8 0%, #ffffff 48%);
+}
+
+.task-returned {
+  --task-accent: var(--van-red);
+  background: linear-gradient(90deg, #fff6f6 0%, #ffffff 48%);
 }
 
 .task-head {
@@ -180,14 +281,14 @@ body {
 
 .task h3 {
   color: var(--van-text);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
 }
 
 .task p {
   color: var(--van-text-2);
-  font-size: 14px;
-  line-height: 1.55;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 .task-meta-grid {
@@ -203,7 +304,7 @@ body {
   display: grid;
   gap: 3px;
   min-width: 0;
-  padding: 9px 10px;
+  padding: 7px 9px;
   border-right: 1px solid var(--van-border);
   border-bottom: 1px solid var(--van-border);
 }
@@ -231,8 +332,8 @@ body {
 }
 
 .badge {
-  min-height: 24px;
-  padding: 2px 8px;
+  min-height: 22px;
+  padding: 1px 7px;
   border-radius: 999px;
   background: #ecf9ff;
   color: var(--van-blue);
@@ -252,8 +353,12 @@ body {
 
 .task-actions {
   display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.task-actions:has(button:nth-child(4)) {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
 }
 
 .task-actions button,
@@ -261,13 +366,27 @@ body {
 .return-actions button,
 .sticky-primary,
 .create-cta {
-  min-height: 42px;
+  min-height: 36px;
   border: 0;
-  border-radius: 999px;
+  border-radius: 9px;
   background: var(--van-blue);
   color: #ffffff;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
+}
+
+.task-actions button {
+  padding: 0 8px;
+}
+
+.detail-actions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding-top: 0;
+}
+
+.return-actions {
+  gap: 8px;
 }
 
 button.secondary,
@@ -297,7 +416,7 @@ button.danger,
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0;
-  min-height: calc(56px + env(safe-area-inset-bottom));
+  min-height: calc(54px + env(safe-area-inset-bottom));
   margin: 0;
   padding: 5px 0 env(safe-area-inset-bottom);
   border-top: 1px solid var(--van-border);
@@ -307,8 +426,8 @@ button.danger,
 
 .bottom-nav button {
   position: relative;
-  min-height: 50px;
-  padding: 24px 4px 4px;
+  min-height: 48px;
+  padding: 23px 4px 3px;
   border: 0;
   border-radius: 0;
   background: transparent;
@@ -356,11 +475,18 @@ button.danger,
 .form-card,
 .stats-card {
   gap: 14px;
-  padding: 14px;
+  padding: 12px;
   border: 0;
   border-radius: var(--van-radius);
   background: var(--van-card);
   box-shadow: var(--van-shadow);
+}
+
+.mine-card + .mine-card,
+.form-card + .form-card,
+.detail-card + .detail-card,
+.stats-card + .stats-card {
+  margin-top: 10px;
 }
 
 .inline-form label,
@@ -388,18 +514,18 @@ textarea,
 #submitDialog textarea,
 #submitDialog input,
 #returnDialog textarea {
-  min-height: 46px;
+  min-height: 42px;
   border: 1px solid var(--van-border);
   border-radius: 9px;
   background: #fafafa;
   color: var(--van-text);
-  font-size: 15px;
+  font-size: 14px;
 }
 
 textarea,
 #submitForm textarea,
 #returnForm textarea {
-  min-height: 120px;
+  min-height: 110px;
   line-height: 1.6;
 }
 
@@ -429,8 +555,8 @@ textarea,
   position: sticky;
   top: 0;
   z-index: 5;
-  min-height: 50px;
-  margin: 0 -12px 12px;
+  min-height: 48px;
+  margin: 0 -12px 10px;
   padding: 0 12px;
   border-bottom: 1px solid var(--van-border);
   background: rgba(255, 255, 255, 0.96);
@@ -440,7 +566,7 @@ textarea,
 .page-head h2 {
   color: var(--van-text);
   font-size: 17px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .icon-back {
@@ -455,7 +581,7 @@ textarea,
 #returnForm,
 #userDialog,
 #profileForm {
-  padding-bottom: 82px;
+  padding-bottom: 76px;
 }
 
 .detail-summary {
@@ -474,7 +600,8 @@ textarea,
 .form-card h3,
 .stats-card h3 {
   color: var(--van-text);
-  font-size: 16px;
+  font-size: 15px;
+  font-weight: 800;
 }
 
 .info-grid {
@@ -487,13 +614,13 @@ textarea,
 
 .info-grid div {
   gap: 4px;
-  padding: 10px;
+  padding: 8px;
   border-right: 1px solid var(--van-border);
   background: #fafafa;
 }
 
 .soft-box {
-  padding: 12px;
+  padding: 10px;
   border-radius: 10px;
   background: #fafafa;
   color: var(--van-text-2);
@@ -517,7 +644,7 @@ textarea,
 }
 
 .upload-zone {
-  min-height: 118px;
+  min-height: 100px;
   border: 1px dashed #b7d9ff;
   border-radius: 12px;
   background: #f7fbff;
@@ -541,6 +668,10 @@ textarea,
 
 .mine-profile {
   grid-template-columns: 74px 1fr;
+  align-items: center;
+  background:
+    linear-gradient(135deg, rgba(25, 137, 250, 0.1) 0%, rgba(255, 255, 255, 0) 58%),
+    var(--van-card);
 }
 
 .profile-avatar {
@@ -567,7 +698,7 @@ textarea,
 }
 
 .stats-page {
-  gap: 10px;
+  gap: 9px;
 }
 
 .stats-grid {
@@ -575,7 +706,7 @@ textarea,
 }
 
 .metric {
-  min-height: 86px;
+  min-height: 78px;
   border: 1px solid var(--van-border);
   border-radius: 10px;
   background: #fafafa;
@@ -594,8 +725,8 @@ textarea,
 }
 
 .risk-main {
-  width: 96px;
-  height: 96px;
+  width: 88px;
+  height: 88px;
   border-radius: 14px;
   background: #fff7f2;
 }
@@ -641,6 +772,10 @@ textarea,
 
   .task-actions,
   .detail-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .task-actions:has(button:nth-child(5)) {
     grid-template-columns: 1fr;
   }
 
