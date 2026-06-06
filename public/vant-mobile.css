@@ -550,6 +550,110 @@ textarea,
   border-radius: 7px;
 }
 
+#dueDateDisplay {
+  cursor: pointer;
+}
+
+.picker-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  align-items: end;
+  background: rgba(0, 0, 0, 0.34);
+}
+
+.picker-overlay.hidden {
+  display: none;
+}
+
+.date-picker-sheet {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+  max-height: 78vh;
+  padding: 12px 14px calc(16px + env(safe-area-inset-bottom));
+  border-radius: 18px 18px 0 0;
+  background: var(--van-card);
+  box-shadow: 0 -8px 28px rgba(16, 30, 54, 0.16);
+}
+
+.picker-head {
+  display: grid;
+  grid-template-columns: 72px 1fr 72px;
+  align-items: center;
+  min-height: 38px;
+}
+
+.picker-head strong {
+  color: var(--van-text);
+  font-size: 16px;
+  text-align: center;
+}
+
+.picker-head button {
+  min-height: 34px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--van-blue);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.picker-head .secondary {
+  color: var(--van-text-3);
+}
+
+.picker-section {
+  display: grid;
+  gap: 8px;
+}
+
+.picker-section > span,
+.picker-custom > span {
+  color: var(--van-text-3);
+  font-size: 13px;
+}
+
+.picker-chips {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.picker-chips button {
+  display: grid;
+  gap: 3px;
+  min-height: 50px;
+  padding: 7px 10px;
+  border: 1px solid var(--van-border);
+  border-radius: 10px;
+  background: #fafafa;
+  color: var(--van-text);
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+}
+
+.picker-chips button small {
+  color: var(--van-text-3);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.picker-chips button.active {
+  border-color: #91caff;
+  background: #eef7ff;
+  color: var(--van-blue);
+}
+
+.picker-custom {
+  display: grid;
+  gap: 8px;
+}
+
 textarea,
 #submitForm textarea,
 #returnForm textarea {

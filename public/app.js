@@ -33,6 +33,8 @@ function cacheElements() {
     "authView", "appView", "authForm", "authHint", "authUsername", "authPassword",
     "authName", "authNameWrap", "authSubmit", "appTopbar", "userMeta", "logout", "userManage",
     "adminConsole", "assignee", "taskForm", "taskList", "message", "taskStats",
+    "dueDateDisplay", "dueDate", "datePickerOverlay", "cancelDatePicker",
+    "confirmDatePicker", "dateQuickList", "timeQuickList", "customDateTime",
     "tasksView", "createView", "statsView", "mineView", "submitDialog", "submitForm",
     "resultText", "resultFile", "submitSummary", "closeSubmit",
     "detailDialog", "detailBody", "closeDetail",

@@ -95,7 +95,8 @@
             </div>
             <label>
               <span>截止时间</span>
-              <input id="dueDate" type="datetime-local" required />
+              <input id="dueDateDisplay" type="text" readonly placeholder="请选择截止时间" />
+              <input id="dueDate" type="hidden" required />
             </label>
             <button class="sticky-primary" type="submit">创建并派单</button>
           </form>
@@ -262,6 +263,28 @@
       <img id="imagePreviewImg" alt="图片附件预览" />
       <p id="imagePreviewName"></p>
     </dialog>
+
+    <div id="datePickerOverlay" class="picker-overlay hidden">
+      <section class="date-picker-sheet" role="dialog" aria-label="选择截止时间">
+        <div class="picker-head">
+          <button id="cancelDatePicker" class="secondary" type="button">取消</button>
+          <strong>截止时间</strong>
+          <button id="confirmDatePicker" type="button">确定</button>
+        </div>
+        <div class="picker-section">
+          <span>日期</span>
+          <div id="dateQuickList" class="picker-chips"></div>
+        </div>
+        <div class="picker-section">
+          <span>时间</span>
+          <div id="timeQuickList" class="picker-chips"></div>
+        </div>
+        <label class="picker-custom">
+          <span>自定义时间</span>
+          <input id="customDateTime" type="datetime-local" />
+        </label>
+      </section>
+    </div>
 
     <script src="/app.js"></script>
     <script src="/stats.js"></script>

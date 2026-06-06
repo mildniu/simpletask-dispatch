@@ -1,4 +1,18 @@
 const TaskApp = window.App;
+const DATE_QUICK_OPTIONS = [
+  { label: "今天", offset: 0 },
+  { label: "明天", offset: 1 },
+  { label: "后天", offset: 2 },
+  { label: "本周五", weekday: 5 },
+];
+const TIME_QUICK_OPTIONS = [
+  { label: "上午 10:00", value: "10:00" },
+  { label: "中午 12:00", value: "12:00" },
+  { label: "下午 18:00", value: "18:00" },
+  { label: "晚上 21:00", value: "21:00" },
+];
+let selectedDate = "";
+let selectedTime = "18:00";
 
 TaskApp.loadAssignees = async function loadAssignees() {
   const data = await TaskApp.api("/api/users/assignees");
@@ -29,6 +43,13 @@ TaskApp.renderTasks = function renderTasks() {
 
 TaskApp.elsReady = document.addEventListener("DOMContentLoaded", () => {
   TaskApp.els.taskForm.addEventListener("submit", createTask);
+  TaskApp.els.dueDateDisplay.addEventListener("click", openDatePicker);
+  TaskApp.els.cancelDatePicker.addEventListener("click", closeDatePicker);
+  TaskApp.els.datePickerOverlay.addEventListener("click", (event) => {
+    if (event.target === TaskApp.els.datePickerOverlay) closeDatePicker();
+  });
+  TaskApp.els.confirmDatePicker.addEventListener("click", confirmDatePicker);
+  TaskApp.els.customDateTime.addEventListener("input", useCustomDateTime);
   TaskApp.els.submitForm.addEventListener("submit", submitResult);
   TaskApp.els.returnForm.addEventListener("submit", submitReturn);
   TaskApp.els.returnReason.addEventListener("input", updateReturnCount);
@@ -55,6 +76,8 @@ async function createTask(event) {
   };
   const data = await TaskApp.api("/api/tasks", { method: "POST", body: JSON.stringify(input) });
   TaskApp.els.taskForm.reset();
+  TaskApp.els.dueDate.value = "";
+  TaskApp.els.dueDateDisplay.value = "";
   resetAssigneeSelection();
   TaskApp.state.activePage = "tasks";
   document.querySelectorAll(".bottom-nav [data-page]").forEach((button) => {
@@ -64,6 +87,85 @@ async function createTask(event) {
   TaskApp.els.createView.classList.add("hidden");
   TaskApp.showMessage((data.tasks || []).length > 1 ? `已创建 ${(data.tasks || []).length} 条任务` : "任务已创建");
   await TaskApp.loadTasks();
+}
+
+function openDatePicker() {
+  if (!selectedDate) selectedDate = dateValue(addDays(new Date(), 1));
+  renderDatePicker();
+  TaskApp.els.datePickerOverlay.classList.remove("hidden");
+}
+
+function closeDatePicker() {
+  TaskApp.els.datePickerOverlay.classList.add("hidden");
+}
+
+function renderDatePicker() {
+  TaskApp.els.dateQuickList.innerHTML = DATE_QUICK_OPTIONS.map((item) => {
+    const value = item.weekday ? nextWeekdayValue(item.weekday) : dateValue(addDays(new Date(), item.offset));
+    return pickerChip("date", value, item.label, value === selectedDate);
+  }).join("");
+  TaskApp.els.timeQuickList.innerHTML = TIME_QUICK_OPTIONS.map((item) => (
+    pickerChip("time", item.value, item.label, item.value === selectedTime)
+  )).join("");
+  TaskApp.els.dateQuickList.querySelectorAll("[data-picker-value]").forEach((button) => {
+    button.addEventListener("click", () => {
+      selectedDate = button.dataset.pickerValue;
+      TaskApp.els.customDateTime.value = "";
+      renderDatePicker();
+    });
+  });
+  TaskApp.els.timeQuickList.querySelectorAll("[data-picker-value]").forEach((button) => {
+    button.addEventListener("click", () => {
+      selectedTime = button.dataset.pickerValue;
+      TaskApp.els.customDateTime.value = "";
+      renderDatePicker();
+    });
+  });
+}
+
+function pickerChip(type, value, label, active) {
+  return `<button class="${active ? "active" : ""}" data-picker-type="${type}" data-picker-value="${value}" type="button">${label}<small>${value}</small></button>`;
+}
+
+function confirmDatePicker() {
+  const custom = TaskApp.els.customDateTime.value;
+  const value = custom || `${selectedDate}T${selectedTime}`;
+  if (!value || !value.includes("T")) return TaskApp.showMessage("请选择截止时间");
+  setDueDate(value);
+  closeDatePicker();
+}
+
+function useCustomDateTime() {
+  selectedDate = "";
+  selectedTime = "";
+}
+
+function setDueDate(value) {
+  TaskApp.els.dueDate.value = value;
+  TaskApp.els.dueDateDisplay.value = formatDateTimeLabel(value);
+}
+
+function formatDateTimeLabel(value) {
+  return value ? value.replace("T", " ") : "";
+}
+
+function addDays(date, days) {
+  const next = new Date(date);
+  next.setDate(next.getDate() + days);
+  return next;
+}
+
+function dateValue(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function nextWeekdayValue(weekday) {
+  const now = new Date();
+  const diff = (weekday - now.getDay() + 7) % 7 || 7;
+  return dateValue(addDays(now, diff));
 }
 
 function canCreateMultiAssigneeTasks() {

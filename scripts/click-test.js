@@ -122,6 +122,13 @@ async function testMobile(page) {
   });
   await assertActive(page, ".bottom-nav [data-page='create']");
   assert.equal(await page.locator("#appTopbar").evaluate((el) => el.classList.contains("hidden")), true);
+  await page.click("#dueDateDisplay");
+  await page.waitForSelector("#datePickerOverlay:not(.hidden)");
+  await page.locator("#dateQuickList [data-picker-value]").nth(1).click();
+  await page.locator("#timeQuickList [data-picker-value='18:00']").click();
+  await page.click("#confirmDatePicker");
+  await page.waitForFunction(() => document.querySelector("#datePickerOverlay").classList.contains("hidden"));
+  assert.match(await page.locator("#dueDate").inputValue(), /T18:00$/);
 
   await clickAndExpect(page.locator("#openStats"), async () => {
     await page.waitForSelector("#statsView:not(.hidden)");
