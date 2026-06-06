@@ -16,6 +16,7 @@ window.App = {
 };
 
 const App = window.App;
+const ACTIVE_PAGE_KEY = "simpletask.activePage";
 
 async function api(path, options = {}) {
   const res = await fetch(path, {
@@ -124,12 +125,13 @@ async function enterApp(user) {
   App.els.adminConsole.classList.toggle("hidden", !isAdmin());
   await App.loadAssignees();
   await App.loadTasks();
-  setActivePage("tasks");
+  setActivePage(savedActivePage());
 }
 
 async function logout() {
   await api("/api/logout", { method: "POST", body: "{}" });
   App.state.currentUser = null;
+  localStorage.removeItem(ACTIVE_PAGE_KEY);
   showAuth("login");
 }
 
@@ -150,7 +152,9 @@ function setStatsRange(range) {
 }
 
 function setActivePage(page) {
+  if (!["tasks", "create", "stats", "mine"].includes(page)) page = "tasks";
   App.state.activePage = page;
+  localStorage.setItem(ACTIVE_PAGE_KEY, page);
   for (const name of ["tasks", "create", "stats", "mine"]) {
     App.els[`${name}View`].classList.toggle("hidden", name !== page);
   }
@@ -161,6 +165,11 @@ function setActivePage(page) {
   if (page === "mine") renderMinePage();
   App.els.appTopbar.classList.toggle("hidden", page !== "tasks");
   window.scrollTo({ top: 0, behavior: "instant" });
+}
+
+function savedActivePage() {
+  const page = localStorage.getItem(ACTIVE_PAGE_KEY);
+  return ["tasks", "create", "stats", "mine"].includes(page) ? page : "tasks";
 }
 
 function closeTopDialog() {

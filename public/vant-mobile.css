@@ -489,6 +489,18 @@ button.danger,
   margin-top: 10px;
 }
 
+#detailDialog .detail-card {
+  margin-bottom: 8px;
+}
+
+#detailDialog .detail-card + .detail-card {
+  margin-top: 0;
+}
+
+#detailDialog .detail-body {
+  gap: 0;
+}
+
 .inline-form label,
 #profileForm label,
 #submitForm label,
