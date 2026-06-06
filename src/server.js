@@ -183,8 +183,13 @@ async function handleTaskApi(req, res, route, user) {
   }
   if (req.method === "POST" && route.url.pathname === "/api/tasks") {
     const input = await readJson(req);
-    requireFields(input, ["title", "description", "dueDate", "assigneeName"]);
-    sendJson(res, 201, { task: createTask(db, normalizeTaskInput(input, user)) });
+    requireFields(input, ["title", "description", "dueDate"]);
+    const assigneeNames = normalizeAssigneeNames(input);
+    if (assigneeNames.length > 1 && !canCreateMultiAssigneeTasks(user)) {
+      throw new Error("当前角色只能选择一名负责人");
+    }
+    const tasks = assigneeNames.map((assigneeName) => createTask(db, normalizeTaskInput({ ...input, assigneeName }, user)));
+    sendJson(res, 201, { task: tasks[0], tasks });
     return true;
   }
   return await handleTaskAction(req, res, route, user);
@@ -270,6 +275,13 @@ function normalizeTaskInput(input, user) {
   };
 }
 
+function normalizeAssigneeNames(input) {
+  const names = Array.isArray(input.assigneeNames) ? input.assigneeNames : [input.assigneeName];
+  const unique = [...new Set(names.map((name) => String(name || "").trim()).filter(Boolean))];
+  if (!unique.length) throw new Error("请选择负责人");
+  return unique;
+}
+
 function normalizeUserInput(input, partial = false) {
   const output = {};
   for (const key of ["username", "password", "name", "role", "status", "position"]) {
@@ -309,6 +321,10 @@ function canViewAllTasks(user) {
 
 function isAdmin(user) {
   return user.role === ROLES.ADMIN;
+}
+
+function canCreateMultiAssigneeTasks(user) {
+  return [ROLES.ADMIN, ROLES.MANAGER, ROLES.SUPERVISOR].includes(user.role);
 }
 
 function isUserUpdateRoute(route) {

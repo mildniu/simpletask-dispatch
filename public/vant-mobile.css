@@ -516,6 +516,12 @@ label span,
   font-size: 13px;
 }
 
+.field-hint {
+  color: var(--van-text-3);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
 input,
 select,
 textarea,
@@ -532,6 +538,16 @@ textarea,
   background: #fafafa;
   color: var(--van-text);
   font-size: 14px;
+}
+
+#assignee[multiple] {
+  min-height: 148px;
+  padding: 6px;
+}
+
+#assignee[multiple] option {
+  padding: 8px 10px;
+  border-radius: 7px;
 }
 
 textarea,

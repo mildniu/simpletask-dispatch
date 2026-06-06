@@ -3,6 +3,8 @@ const TaskApp = window.App;
 TaskApp.loadAssignees = async function loadAssignees() {
   const data = await TaskApp.api("/api/users/assignees");
   TaskApp.state.users = data.users;
+  TaskApp.els.assignee.multiple = canCreateMultiAssigneeTasks();
+  TaskApp.els.assignee.size = canCreateMultiAssigneeTasks() ? Math.min(Math.max(data.users.length, 4), 8) : 0;
   TaskApp.els.assignee.innerHTML = data.users.map((user) => (
     `<option value="${TaskApp.escapeHtml(user.name)}">${TaskApp.escapeHtml(user.name)} - ${TaskApp.roleLabel(user.role)}</option>`
   )).join("");
@@ -49,18 +51,36 @@ async function createTask(event) {
     description: TaskApp.getValue("#description"),
     priority: TaskApp.getValue("#priority"),
     dueDate: TaskApp.getValue("#dueDate"),
-    assigneeName: TaskApp.getValue("#assignee"),
+    ...assigneePayload(),
   };
-  await TaskApp.api("/api/tasks", { method: "POST", body: JSON.stringify(input) });
+  const data = await TaskApp.api("/api/tasks", { method: "POST", body: JSON.stringify(input) });
   TaskApp.els.taskForm.reset();
+  resetAssigneeSelection();
   TaskApp.state.activePage = "tasks";
   document.querySelectorAll(".bottom-nav [data-page]").forEach((button) => {
     button.classList.toggle("active", button.dataset.page === "tasks");
   });
   TaskApp.els.tasksView.classList.remove("hidden");
   TaskApp.els.createView.classList.add("hidden");
-  TaskApp.showMessage("任务已创建");
+  TaskApp.showMessage((data.tasks || []).length > 1 ? `已创建 ${(data.tasks || []).length} 条任务` : "任务已创建");
   await TaskApp.loadTasks();
+}
+
+function canCreateMultiAssigneeTasks() {
+  const role = TaskApp.state.currentUser && TaskApp.state.currentUser.role;
+  return ["admin", "manager", "supervisor"].includes(role);
+}
+
+function assigneePayload() {
+  if (!canCreateMultiAssigneeTasks()) return { assigneeName: TaskApp.getValue("#assignee") };
+  const assigneeNames = Array.from(TaskApp.els.assignee.selectedOptions).map((option) => option.value);
+  return { assigneeNames };
+}
+
+function resetAssigneeSelection() {
+  Array.from(TaskApp.els.assignee.options).forEach((option) => {
+    option.selected = false;
+  });
 }
 
 function renderTask(task) {

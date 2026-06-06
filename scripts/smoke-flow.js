@@ -123,6 +123,13 @@ async function main() {
       role: "member",
       position: "验收成员",
     }, adminCookie);
+    await request("POST", "/api/users", {
+      username: "manager",
+      password: "SmokePass123",
+      name: "验收经理",
+      role: "manager",
+      position: "验收经理",
+    }, adminCookie);
 
     const assignees = await request("GET", "/api/users/assignees", null, adminCookie);
     assert.equal(assignees.data.users.some((user) => user.name === "验收负责人"), true);
@@ -135,7 +142,6 @@ async function main() {
       assigneeName: "验收负责人",
     }, adminCookie);
     assert.equal(created.data.task.status, "待接单");
-
     const login = await request("POST", "/api/login", {
       username: "worker",
       password: "SmokePass123",
@@ -148,6 +154,30 @@ async function main() {
     const otherCookie = cookieFrom(otherLogin.headers);
     const otherTasks = await request("GET", "/api/tasks", null, otherCookie);
     assert.equal(otherTasks.data.tasks.length, 0);
+    const managerLogin = await request("POST", "/api/login", {
+      username: "manager",
+      password: "SmokePass123",
+    });
+    const managerCookie = cookieFrom(managerLogin.headers);
+    const batch = await request("POST", "/api/tasks", {
+      title: "批量派单验收",
+      description: "验证经理主管可一次派给多人",
+      dueDate: "2026-12-31T18:00",
+      priority: "普通",
+      assigneeNames: ["验收负责人", "无关人员"],
+    }, managerCookie);
+    assert.equal(batch.data.tasks.length, 2);
+    assert.deepEqual(batch.data.tasks.map((task) => task.assignee_name), ["验收负责人", "无关人员"]);
+    await assert.rejects(
+      () => request("POST", "/api/tasks", {
+        title: "成员批量派单应失败",
+        description: "普通成员不能一次选择多人",
+        dueDate: "2026-12-31T18:00",
+        priority: "普通",
+        assigneeNames: ["验收负责人", "无关人员"],
+      }, workerCookie),
+      /当前角色只能选择一名负责人/,
+    );
 
     const accepted = await request("POST", `/api/tasks/${created.data.task.id}/accept`, {}, workerCookie);
     assert.equal(accepted.data.task.status, "处理中");
