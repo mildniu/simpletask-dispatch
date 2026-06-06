@@ -185,6 +185,7 @@ async function handleTaskApi(req, res, route, user) {
     const input = await readJson(req);
     requireFields(input, ["title", "description", "dueDate"]);
     const assigneeNames = normalizeAssigneeNames(input);
+    ensureAssigneesCanReceiveTasks(assigneeNames);
     if (assigneeNames.length > 1 && !canCreateMultiAssigneeTasks(user)) {
       throw new Error("当前角色只能选择一名负责人");
     }
@@ -280,6 +281,12 @@ function normalizeAssigneeNames(input) {
   const unique = [...new Set(names.map((name) => String(name || "").trim()).filter(Boolean))];
   if (!unique.length) throw new Error("请选择负责人");
   return unique;
+}
+
+function ensureAssigneesCanReceiveTasks(assigneeNames) {
+  const placeholders = assigneeNames.map(() => "?").join(", ");
+  const admins = db.prepare(`SELECT name FROM users WHERE name IN (${placeholders}) AND role = ?`).all(...assigneeNames, ROLES.ADMIN);
+  if (admins.length) throw new Error("不能向系统管理员派单");
 }
 
 function normalizeUserInput(input, partial = false) {

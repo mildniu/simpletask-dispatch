@@ -17,10 +17,10 @@ const selectedAssignees = new Set();
 
 TaskApp.loadAssignees = async function loadAssignees() {
   const data = await TaskApp.api("/api/users/assignees");
-  TaskApp.state.users = data.users;
+  TaskApp.state.users = data.users.filter((user) => user.role !== "admin");
   TaskApp.els.assignee.multiple = canCreateMultiAssigneeTasks();
   TaskApp.els.assignee.removeAttribute("size");
-  TaskApp.els.assignee.innerHTML = data.users.map((user) => (
+  TaskApp.els.assignee.innerHTML = TaskApp.state.users.map((user) => (
     `<option value="${TaskApp.escapeHtml(user.name)}">${TaskApp.escapeHtml(user.name)} - ${TaskApp.roleLabel(user.role)}</option>`
   )).join("");
   renderAssigneeSummary();

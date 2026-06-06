@@ -134,6 +134,17 @@ async function main() {
     const assignees = await request("GET", "/api/users/assignees", null, adminCookie);
     assert.equal(assignees.data.users.some((user) => user.name === "验收负责人"), true);
 
+    await assert.rejects(
+      () => request("POST", "/api/tasks", {
+        title: "禁止派给管理员",
+        description: "任何人不能向管理员派单",
+        dueDate: "2026-12-31T18:00",
+        priority: "普通",
+        assigneeName: "验收管理员",
+      }, adminCookie),
+      /不能向系统管理员派单/,
+    );
+
     const created = await request("POST", "/api/tasks", {
       title: "验收任务",
       description: "验证创建、接单、提交、退回、再次提交和确认流程",
@@ -168,6 +179,16 @@ async function main() {
     }, managerCookie);
     assert.equal(batch.data.tasks.length, 2);
     assert.deepEqual(batch.data.tasks.map((task) => task.assignee_name), ["验收负责人", "无关人员"]);
+    await assert.rejects(
+      () => request("POST", "/api/tasks", {
+        title: "批量里包含管理员应失败",
+        description: "批量派单也不能包含管理员",
+        dueDate: "2026-12-31T18:00",
+        priority: "普通",
+        assigneeNames: ["验收负责人", "验收管理员"],
+      }, managerCookie),
+      /不能向系统管理员派单/,
+    );
     await assert.rejects(
       () => request("POST", "/api/tasks", {
         title: "成员批量派单应失败",
