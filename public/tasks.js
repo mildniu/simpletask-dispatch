@@ -157,11 +157,13 @@ async function showDetail(taskId) {
 
 function renderDetail(task, events, progress) {
   return `
-    <section class="detail-card detail-summary">
-      <div class="detail-icon">▣</div>
-      <div>
-        <h3>${TaskApp.escapeHtml(task.title)}</h3>
-        <span class="badge ${badgeClass(task.status)}">${TaskApp.escapeHtml(task.status)}</span>
+    <section class="detail-card detail-summary ${taskStatusClass(task.status)}">
+      <div class="detail-title-row">
+        <div class="detail-icon">▣</div>
+        <div>
+          <h3>${TaskApp.escapeHtml(task.title)}</h3>
+          <span class="badge ${badgeClass(task.status)}">${TaskApp.escapeHtml(task.status)}</span>
+        </div>
       </div>
       <div class="info-grid">
         ${infoItem("派单人", task.creator_name)}
@@ -169,14 +171,14 @@ function renderDetail(task, events, progress) {
         ${infoItem("截止时间", TaskApp.formatDate(task.due_date))}
       </div>
     </section>
-    <section class="detail-card">
+    <section class="detail-card detail-section-card">
       <h3>任务内容</h3>
       <p class="soft-box">${TaskApp.escapeHtml(task.description)}</p>
       ${renderAttachment(task)}
     </section>
-    <section class="detail-card"><h3>阶段进展</h3>${renderProgress(task, progress)}</section>
-    <section class="detail-card"><h3>流转记录</h3><ol class="timeline">${events.map(renderEvent).join("")}</ol></section>
-    <div class="detail-actions">${renderDetailActions(task)}</div>
+    <section class="detail-card detail-section-card"><h3>阶段进展</h3>${renderProgress(task, progress)}</section>
+    <section class="detail-card detail-section-card"><h3>流转记录</h3><ol class="timeline">${events.map(renderEvent).join("")}</ol></section>
+    <div class="detail-actions detail-action-bar">${renderDetailActions(task)}</div>
   `;
 }
 
