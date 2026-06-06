@@ -81,7 +81,11 @@
             <div class="row">
               <label>
                 <span>负责人</span>
-                <select id="assignee" required></select>
+                <button id="openAssigneePicker" class="select-display" type="button">
+                  <strong id="assigneeSummary">请选择负责人</strong>
+                  <small>点击选择</small>
+                </button>
+                <select id="assignee" class="hidden-select" required></select>
                 <small class="field-hint">经理、主管可选择多人，系统会分别生成任务</small>
               </label>
               <label>
@@ -283,6 +287,22 @@
           <span>自定义时间</span>
           <input id="customDateTime" type="datetime-local" />
         </label>
+      </section>
+    </div>
+
+    <div id="assigneePickerOverlay" class="picker-overlay hidden">
+      <section class="assignee-picker-sheet" role="dialog" aria-label="选择负责人">
+        <div class="picker-head">
+          <button id="cancelAssigneePicker" class="secondary" type="button">取消</button>
+          <strong>选择负责人</strong>
+          <button id="confirmAssigneePicker" type="button">确定</button>
+        </div>
+        <input id="assigneeSearch" type="search" placeholder="搜索姓名或角色" />
+        <div id="assigneePickerTools" class="assignee-picker-tools">
+          <button id="selectAllAssignees" class="secondary" type="button">全选</button>
+          <button id="clearAssignees" class="secondary" type="button">清空</button>
+        </div>
+        <div id="assigneePickerList" class="assignee-picker-list"></div>
       </section>
     </div>
 

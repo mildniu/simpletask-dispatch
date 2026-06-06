@@ -550,6 +550,44 @@ textarea,
   border-radius: 7px;
 }
 
+.hidden-select {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.select-display {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  min-height: 42px;
+  padding: 8px 10px;
+  border: 1px solid var(--van-border);
+  border-radius: 9px;
+  background: #fafafa;
+  color: var(--van-text);
+  text-align: left;
+}
+
+.select-display strong {
+  overflow: hidden;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.select-display small {
+  color: var(--van-blue);
+  font-size: 12px;
+}
+
 #dueDateDisplay {
   cursor: pointer;
 }
@@ -652,6 +690,115 @@ textarea,
 .picker-custom {
   display: grid;
   gap: 8px;
+}
+
+.assignee-picker-sheet {
+  display: grid;
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+  gap: 10px;
+  width: 100%;
+  height: min(78vh, 680px);
+  padding: 12px 14px calc(16px + env(safe-area-inset-bottom));
+  border-radius: 18px 18px 0 0;
+  background: var(--van-card);
+  box-shadow: 0 -8px 28px rgba(16, 30, 54, 0.16);
+}
+
+#assigneeSearch {
+  min-height: 40px;
+  border-radius: 999px;
+  background: #f7f8fa;
+}
+
+.assignee-picker-tools {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.assignee-picker-tools button {
+  min-height: 34px;
+  border-radius: 999px;
+}
+
+.assignee-picker-list {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  overflow: auto;
+  padding-right: 2px;
+}
+
+.assignee-option {
+  display: grid;
+  grid-template-columns: 26px 34px 1fr;
+  grid-template-areas:
+    "check avatar name"
+    "check avatar meta";
+  gap: 2px 9px;
+  align-items: center;
+  min-height: 54px;
+  padding: 8px 10px;
+  border: 1px solid var(--van-border);
+  border-radius: 11px;
+  background: #fafafa;
+  color: var(--van-text);
+  text-align: left;
+}
+
+.assignee-option.active {
+  border-color: #91caff;
+  background: #1f5f9f;
+  color: #ffffff;
+}
+
+.assignee-check {
+  grid-area: check;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid #c8d6e6;
+  border-radius: 50%;
+  color: var(--van-blue);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.assignee-option.active .assignee-check {
+  border-color: rgba(255, 255, 255, 0.8);
+  background: transparent;
+  color: #ffffff;
+}
+
+.assignee-option.active .avatar {
+  background: #eaf4ff;
+  color: var(--van-blue);
+}
+
+.assignee-option .avatar {
+  grid-area: avatar;
+}
+
+.assignee-option strong {
+  grid-area: name;
+  overflow: hidden;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.assignee-option small {
+  grid-area: meta;
+  overflow: hidden;
+  color: var(--van-text-3);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.assignee-option.active small {
+  color: rgba(255, 255, 255, 0.78);
 }
 
 textarea,

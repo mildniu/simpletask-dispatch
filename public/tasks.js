@@ -13,15 +13,17 @@ const TIME_QUICK_OPTIONS = [
 ];
 let selectedDate = "";
 let selectedTime = "18:00";
+const selectedAssignees = new Set();
 
 TaskApp.loadAssignees = async function loadAssignees() {
   const data = await TaskApp.api("/api/users/assignees");
   TaskApp.state.users = data.users;
   TaskApp.els.assignee.multiple = canCreateMultiAssigneeTasks();
-  TaskApp.els.assignee.size = canCreateMultiAssigneeTasks() ? Math.min(Math.max(data.users.length, 4), 8) : 0;
+  TaskApp.els.assignee.removeAttribute("size");
   TaskApp.els.assignee.innerHTML = data.users.map((user) => (
     `<option value="${TaskApp.escapeHtml(user.name)}">${TaskApp.escapeHtml(user.name)} - ${TaskApp.roleLabel(user.role)}</option>`
   )).join("");
+  renderAssigneeSummary();
 };
 
 TaskApp.loadTasks = async function loadTasks() {
@@ -43,6 +45,15 @@ TaskApp.renderTasks = function renderTasks() {
 
 TaskApp.elsReady = document.addEventListener("DOMContentLoaded", () => {
   TaskApp.els.taskForm.addEventListener("submit", createTask);
+  TaskApp.els.openAssigneePicker.addEventListener("click", openAssigneePicker);
+  TaskApp.els.cancelAssigneePicker.addEventListener("click", closeAssigneePicker);
+  TaskApp.els.confirmAssigneePicker.addEventListener("click", confirmAssigneePicker);
+  TaskApp.els.assigneeSearch.addEventListener("input", renderAssigneePickerList);
+  TaskApp.els.selectAllAssignees.addEventListener("click", selectAllAssignees);
+  TaskApp.els.clearAssignees.addEventListener("click", clearAssignees);
+  TaskApp.els.assigneePickerOverlay.addEventListener("click", (event) => {
+    if (event.target === TaskApp.els.assigneePickerOverlay) closeAssigneePicker();
+  });
   TaskApp.els.dueDateDisplay.addEventListener("click", openDatePicker);
   TaskApp.els.cancelDatePicker.addEventListener("click", closeDatePicker);
   TaskApp.els.datePickerOverlay.addEventListener("click", (event) => {
@@ -180,9 +191,92 @@ function assigneePayload() {
 }
 
 function resetAssigneeSelection() {
+  selectedAssignees.clear();
   Array.from(TaskApp.els.assignee.options).forEach((option) => {
     option.selected = false;
   });
+  renderAssigneeSummary();
+}
+
+function openAssigneePicker() {
+  TaskApp.els.assigneeSearch.value = "";
+  TaskApp.els.assigneePickerTools.classList.toggle("hidden", !canCreateMultiAssigneeTasks());
+  renderAssigneePickerList();
+  TaskApp.els.assigneePickerOverlay.classList.remove("hidden");
+}
+
+function closeAssigneePicker() {
+  TaskApp.els.assigneePickerOverlay.classList.add("hidden");
+}
+
+function renderAssigneePickerList() {
+  const keyword = TaskApp.els.assigneeSearch.value.trim().toLowerCase();
+  const users = TaskApp.state.users.filter((user) => {
+    const text = `${user.name} ${TaskApp.roleLabel(user.role)} ${user.position || ""}`.toLowerCase();
+    return !keyword || text.includes(keyword);
+  });
+  if (!users.length) {
+    TaskApp.els.assigneePickerList.innerHTML = `<p class="muted">没有匹配人员</p>`;
+    return;
+  }
+  TaskApp.els.assigneePickerList.innerHTML = users.map(renderAssigneeOption).join("");
+  TaskApp.els.assigneePickerList.querySelectorAll("[data-assignee-name]").forEach((button) => {
+    button.addEventListener("click", () => toggleAssignee(button.dataset.assigneeName));
+  });
+}
+
+function renderAssigneeOption(user) {
+  const active = selectedAssignees.has(user.name);
+  return `
+    <button class="assignee-option ${active ? "active" : ""}" data-assignee-name="${TaskApp.escapeHtml(user.name)}" type="button">
+      <span class="assignee-check">${active ? "✓" : ""}</span>
+      <span class="avatar mini">${TaskApp.escapeHtml(user.name.slice(0, 1))}</span>
+      <strong>${TaskApp.escapeHtml(user.name)}</strong>
+      <small>${TaskApp.roleLabel(user.role)}${user.position ? ` · ${TaskApp.escapeHtml(user.position)}` : ""}</small>
+    </button>
+  `;
+}
+
+function toggleAssignee(name) {
+  if (!canCreateMultiAssigneeTasks()) selectedAssignees.clear();
+  if (selectedAssignees.has(name)) selectedAssignees.delete(name);
+  else selectedAssignees.add(name);
+  renderAssigneePickerList();
+}
+
+function selectAllAssignees() {
+  if (!canCreateMultiAssigneeTasks()) return;
+  TaskApp.state.users.forEach((user) => selectedAssignees.add(user.name));
+  renderAssigneePickerList();
+}
+
+function clearAssignees() {
+  selectedAssignees.clear();
+  renderAssigneePickerList();
+}
+
+function confirmAssigneePicker() {
+  if (!selectedAssignees.size) return TaskApp.showMessage("请选择负责人");
+  syncAssigneeSelect();
+  renderAssigneeSummary();
+  closeAssigneePicker();
+}
+
+function syncAssigneeSelect() {
+  Array.from(TaskApp.els.assignee.options).forEach((option) => {
+    option.selected = selectedAssignees.has(option.value);
+  });
+}
+
+function renderAssigneeSummary() {
+  const names = Array.from(selectedAssignees);
+  if (!names.length) {
+    TaskApp.els.assigneeSummary.textContent = "请选择负责人";
+    return;
+  }
+  TaskApp.els.assigneeSummary.textContent = names.length === 1
+    ? names[0]
+    : `已选择 ${names.length} 人：${names.slice(0, 3).join("、")}${names.length > 3 ? "等" : ""}`;
 }
 
 function renderTask(task) {

@@ -32,7 +32,10 @@ function cacheElements() {
   const ids = [
     "authView", "appView", "authForm", "authHint", "authUsername", "authPassword",
     "authName", "authNameWrap", "authSubmit", "appTopbar", "userMeta", "logout", "userManage",
-    "adminConsole", "assignee", "taskForm", "taskList", "message", "taskStats",
+    "adminConsole", "assignee", "openAssigneePicker", "assigneeSummary",
+    "assigneePickerOverlay", "cancelAssigneePicker", "confirmAssigneePicker",
+    "assigneeSearch", "assigneePickerTools", "selectAllAssignees", "clearAssignees",
+    "assigneePickerList", "taskForm", "taskList", "message", "taskStats",
     "dueDateDisplay", "dueDate", "datePickerOverlay", "cancelDatePicker",
     "confirmDatePicker", "dateQuickList", "timeQuickList", "customDateTime",
     "tasksView", "createView", "statsView", "mineView", "submitDialog", "submitForm",

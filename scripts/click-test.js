@@ -122,6 +122,13 @@ async function testMobile(page) {
   });
   await assertActive(page, ".bottom-nav [data-page='create']");
   assert.equal(await page.locator("#appTopbar").evaluate((el) => el.classList.contains("hidden")), true);
+  await page.click("#openAssigneePicker");
+  await page.waitForSelector("#assigneePickerOverlay:not(.hidden)");
+  await page.fill("#assigneeSearch", "测试成员");
+  await page.locator("[data-assignee-name='测试成员']").click();
+  await page.click("#confirmAssigneePicker");
+  await page.waitForFunction(() => document.querySelector("#assigneePickerOverlay").classList.contains("hidden"));
+  assert.match(await page.locator("#assigneeSummary").innerText(), /测试成员/);
   await page.click("#dueDateDisplay");
   await page.waitForSelector("#datePickerOverlay:not(.hidden)");
   await page.locator("#dateQuickList [data-picker-value]").nth(1).click();
